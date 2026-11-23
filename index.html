@@ -667,14 +667,22 @@
       return Array.from(a,b=>b.toString(16).padStart(2,'0')).join('');
     }
     function showSetup() {
-      screen('تهيئة المزامنة', `<p style="color:#cbd5e1;margin-bottom:14px">لم تُنشأ بيانات الأسرة في Firestore بعد. عند الضغط على الزر سيتم نقل البيانات المحفوظة في هذا المتصفح فقط، أو القيم الابتدائية إن لم توجد بيانات محفوظة.</p>
-        <p style="color:#facc15;margin-bottom:16px">إذا كانت نقاطك الحقيقية محفوظة في جهاز آخر، افتح هذه الصفحة من ذلك الجهاز أولًا حتى لا تبدأ بالأرصدة الافتراضية.</p>
-        <button class="btn-primary" id="setupCloud">نقل بيانات هذا الجهاز وبدء المزامنة</button>`);
+      screen('بدء المزامنة من الصفر', `<p style="color:#cbd5e1;margin-bottom:14px">سيتم إنشاء بيانات الأبناء الأربعة في Firebase برصيد <strong>صفر نقطة لكل ابن</strong>، وسجل حركات فارغ، دون استيراد أي بيانات قديمة من هذا الجهاز.</p>
+        <p style="color:#facc15;margin-bottom:16px">هذا الإجراء لإنشاء الأسرة لأول مرة فقط. لن يمسح بيانات الأسرة إذا كانت موجودة في Firebase.</p>
+        <button class="btn-primary" id="setupCloud">بدء المزامنة بأرصدة صفر</button>`);
       document.getElementById('setupCloud').onclick = async () => {
-        const b=document.getElementById('setupCloud');b.disabled=true;b.textContent='جارٍ نقل البيانات...';
-        kidTokens=Object.fromEntries(state.kids.map(k=>[k.id,newToken()]));
-        try { await uploadState(); startOwnerSync(); }
-        catch(e){ b.disabled=false;b.textContent='إعادة المحاولة';showToast('فشل إنشاء البيانات؛ تحقق من قواعد Firestore'); }
+        const b=document.getElementById('setupCloud');b.disabled=true;b.textContent='جارٍ إنشاء البيانات...';
+        try {
+          const existing = await getDoc(FAMILY_DOC);
+          if (existing.exists()) { startOwnerSync(); return; }
+          state={selectedKidId:'abdullah',kids:DEFAULT_KIDS.map(k=>({...k,points:0})),dailyEarned:{},logs:[]};
+          kidTokens=Object.fromEntries(state.kids.map(k=>[k.id,newToken()]));
+          await uploadState();
+          startOwnerSync();
+        } catch(e) {
+          b.disabled=false;b.textContent='إعادة المحاولة';
+          showToast('فشل إنشاء البيانات؛ تحقق من الاتصال وقواعد Firestore');
+        }
       };
     }
     function getCloudState() { return {selectedKidId:state.selectedKidId,kids:state.kids,dailyEarned:state.dailyEarned,logs:state.logs}; }
@@ -1226,7 +1234,7 @@
       document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
       document.getElementById('resetDemoBtn').addEventListener('click', () => {
         requirePin('إعادة ضبط البيانات', 'أدخل رمز ولي الأمر (1234) لإعادة ضبط النقاط والسجل للقيم الافتراضية', () => {
-          state = {selectedKidId:'abdullah',kids:DEFAULT_KIDS.map(k=>({...k})),dailyEarned:{},logs:[]};
+          state = {selectedKidId:'abdullah',kids:DEFAULT_KIDS.map(k=>({...k,points:0})),dailyEarned:{},logs:[]};
           saveState();
           render();
           showToast('تمت إعادة الضبط بنجاح');
