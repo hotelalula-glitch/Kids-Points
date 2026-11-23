@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>نقاط الأبناء | لوحة المتابعة والبطولات</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-1: #0b1021;
+      --bg-2: #141c38;
+      --card: rgba(255, 255, 255, 0.07);
+      --card-border: rgba(255, 255, 255, 0.14);
+      --text: #f8fafc;
+      --muted: #cbd5e1;
+      --accent: #38bdf8;
+      --accent-2: #a855f7;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --gold: #facc15;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Cairo', sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 12% 15%, rgba(56, 189, 248, 0.22), transparent 35%),
+        radial-gradient(circle at 88% 12%, rgba(168, 85, 247, 0.22), transparent 38%),
+        radial-gradient(circle at 50% 90%, rgba(34, 197, 94, 0.14), transparent 45%),
+        linear-gradient(145deg, var(--bg-1), var(--bg-2));
+      padding: 20px 14px 60px;
+      overflow-x: hidden;
+    }
+
+    .floating-orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(60px);
+      pointer-events: none;
+      z-index: 0;
+      animation: floatOrb 9s ease-in-out infinite alternate;
+    }
+
+    .orb-1 {
+      width: 220px;
+      height: 220px;
+      background: rgba(56, 189, 248, 0.16);
+      top: 40px;
+      right: -60px;
+    }
+
+    .orb-2 {
+      width: 260px;
+      height: 260px;
+      background: rgba(168, 85, 247, 0.15);
+      bottom: 30px;
+      left: -80px;
+      animation-delay: -3s;
+    }
+
+    @keyframes floatOrb {
+      from { transform: translateY(0px) scale(1); }
+      to { transform: translateY(-24px) scale(1.08); }
+    }
+
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.35); }
+      50% { box-shadow: 0 0 24px 4px rgba(56, 189, 248, 0.18); }
+    }
+
+    .container {
+      max-width: 1120px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+      animation: fadeSlideUp 0.45s ease;
+    }
+
+    .glass {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-radius: 22px;
+      box-shadow: 0 14px 36px rgba(0, 0, 0, 0.28);
+    }
+
+    /* Top Header & Prayer Bar */
+    .top-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 18px 22px;
+      margin-bottom: 18px;
+    }
+
+    .brand h1 {
+      font-size: 1.55rem;
+      font-weight: 900;
+      background: linear-gradient(90deg, #7dd3fc, #e9d5ff, #fde047);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand p {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-top: 2px;
+    }
+
+    .header-badges {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pill {
+      padding: 7px 14px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pill.gold {
+      color: #fef08a;
+      border-color: rgba(250, 204, 21, 0.35);
+      background: rgba(250, 204, 21, 0.12);
+    }
+
+    .prayer-strip {
+      padding: 16px 20px;
+      margin-bottom: 20px;
+    }
+
+    .prayer-top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .prayer-next {
+      font-weight: 800;
+      color: #7dd3fc;
+      font-size: 0.95rem;
+    }
+
+    .prayer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(115px, 1fr));
+      gap: 10px;
+    }
+
+    .prayer-item {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 10px 12px;
+      text-align: center;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .prayer-item:hover {
+      transform: translateY(-2px);
+      border-color: rgba(125, 211, 252, 0.45);
+    }
+
+    .prayer-item.active {
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.22), rgba(168, 85, 247, 0.22));
+      border-color: #38bdf8;
+      animation: pulseGlow 2.4s infinite;
+    }
+
+    .prayer-name {
+      font-size: 0.85rem;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .prayer-time {
+      font-size: 1.05rem;
+      font-weight: 900;
+      margin-top: 3px;
+      color: #fff;
+    }
+
+    /* Kids Selector Cards in Parent Dashboard */
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+      font-size: 1.1rem;
+      font-weight: 800;
+    }
+
+    .kids-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(225px, 1fr));
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .kid-card {
+      padding: 18px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1.5px solid rgba(255, 255, 255, 0.12);
+      cursor: pointer;
+      transition: all 0.22s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .kid-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(125, 211, 252, 0.55);
+    }
+
+    .kid-card.selected {
+      background: linear-gradient(145deg, rgba(56, 189, 248, 0.18), rgba(168, 85, 247, 0.16));
+      border-color: #38bdf8;
+      box-shadow: 0 12px 28px rgba(56, 189, 248, 0.18);
+    }
+
+    .kid-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .kid-avatar {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-size: 1.45rem;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .kid-name {
+      font-size: 1.15rem;
+      font-weight: 900;
+    }
+
+    .kid-stats {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-top: 8px;
+    }
+
+    .kid-pts {
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: #fde047;
+    }
+
+    .kid-sar {
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: #86efac;
+    }
+
+    .kid-daily {
+      margin-top: 8px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .kid-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* Buttons */
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 9px 14px;
+      font-weight: 800;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: transform 0.15s ease, opacity 0.2s ease, background 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    button:active {
+      transform: scale(0.96);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #38bdf8, #818cf8);
+      color: #071120;
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: #06210f;
+    }
+
+    .btn-warning {
+      background: linear-gradient(135deg, #facc15, #eab308);
+      color: #241900;
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, #f87171, #ef4444);
+      color: #fff;
+    }
+
+    .btn-ghost {
+      background: rgba(255, 255, 255, 0.09);
+      color: var(--text);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    /* Main Workspace Layout */
+    .workspace {
+      display: grid;
+      grid-template-columns: 1.25fr 0.95fr;
+      gap: 18px;
+    }
+
+    @media (max-width: 860px) {
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .panel {
+      padding: 20px;
+    }
+
+    .tasks-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(195px, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .task-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 17px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 10px;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .task-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(250, 204, 21, 0.45);
+    }
+
+    .task-title {
+      font-weight: 800;
+      font-size: 0.98rem;
+    }
+
+    .task-pts {
+      color: #fde047;
+      font-weight: 900;
+      font-size: 0.92rem;
+    }
+
+    .custom-adjust {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    input, select {
+      background: rgba(10, 15, 32, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: #fff;
+      border-radius: 12px;
+      padding: 9px 12px;
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    input:focus, select:focus {
+      border-color: #38bdf8;
+    }
+
+    .log-list {
+      margin-top: 12px;
+      max-height: 290px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .log-item {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 13px;
+      padding: 10px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.86rem;
+    }
+
+    .log-plus { color: #4ade80; font-weight: 900; }
+    .log-minus { color: #f87171; font-weight: 900; }
+    .log-redeem { color: #facc15; font-weight: 900; }
+
+    /* Dedicated Kid View Styling */
+    .kid-hero {
+      text-align: center;
+      padding: 28px 20px;
+      margin-bottom: 18px;
+      background: linear-gradient(145deg, rgba(56, 189, 248, 0.18), rgba(168, 85, 247, 0.18), rgba(250, 204, 21, 0.12));
+    }
+
+    .kid-big-avatar {
+      width: 84px;
+      height: 84px;
+      margin: 0 auto 12px;
+      border-radius: 26px;
+      display: grid;
+      place-items: center;
+      font-size: 3rem;
+      background: rgba(255, 255, 255, 0.12);
+      border: 2px solid rgba(255, 255, 255, 0.24);
+      animation: floatOrb 4.5s ease-in-out infinite alternate;
+    }
+
+    .kid-hero h2 {
+      font-size: 1.85rem;
+      font-weight: 900;
+    }
+
+    .kid-hero-sub {
+      color: var(--muted);
+      margin-top: 4px;
+      font-size: 0.95rem;
+    }
+
+    .hero-metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(165px, 1fr));
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .metric-box {
+      background: rgba(11, 16, 33, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 18px;
+      padding: 14px;
+    }
+
+    .metric-label {
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .metric-val {
+      font-size: 1.65rem;
+      font-weight: 900;
+      margin-top: 4px;
+    }
+
+    .progress-wrap {
+      margin-top: 18px;
+      text-align: right;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.1);
+      overflow: hidden;
+      margin-top: 8px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #22c55e, #38bdf8, #facc15);
+      transition: width 0.5s ease;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: #0f172a;
+      color: #fff;
+      border: 1px solid rgba(125, 211, 252, 0.5);
+      padding: 11px 18px;
+      border-radius: 14px;
+      font-weight: 800;
+      font-size: 0.9rem;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+      z-index: 999;
+      opacity: 0;
+      transition: all 0.28s ease;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 6, 23, 0.72);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 900;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-box {
+      width: 100%;
+      max-width: 380px;
+      padding: 22px;
+      text-align: center;
+      animation: fadeSlideUp 0.25s ease;
+    }
+
+    .modal-box h3 {
+      font-size: 1.2rem;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    .modal-box p {
+      color: var(--muted);
+      font-size: 0.88rem;
+      margin-bottom: 14px;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="floating-orb orb-1"></div>
+  <div class="floating-orb orb-2"></div>
+
+  <div class="container" id="appRoot"></div>
+
+  <div class="toast" id="toastBox"></div>
+
+  <div class="modal-backdrop" id="pinModal">
+    <div class="glass modal-box">
+      <h3 id="modalTitle">تحقق ولي الأمر</h3>
+      <p id="modalDesc">أدخل رمز ولي الأمر (1234) للمتابعة</p>
+      <input type="password" id="pinInput" inputmode="numeric" maxlength="6" placeholder="••••" style="width: 100%; text-align: center; font-size: 1.2rem; letter-spacing: 6px;" />
+      <div class="modal-actions">
+        <button class="btn-primary" id="pinConfirmBtn">تأكيد</button>
+        <button class="btn-ghost" id="pinCancelBtn">إلغاء</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const PARENT_PIN = '1234';
+    const POINTS_PER_SAR = 10;
+    const DAILY_CAP = 30;
+    const STORAGE_KEY = 'kids_points_v2_data';
+
+    const DEFAULT_KIDS = [
+      { id: 'abdullah', name: 'عبدالله', avatar: '🦁', title: 'بطل المهام اليومية', points: 40, goal: 100 },
+      { id: 'abdrabbo', name: 'عبدربه', avatar: '🚀', title: 'مستكشف التحديات', points: 30, goal: 100 },
+      { id: 'ransi', name: 'رانسي', avatar: '🌟', title: 'نجمة الانضباط', points: 50, goal: 100 },
+      { id: 'reef', name: 'ريف', avatar: '🦋', title: 'أميرة الإبداع', points: 20, goal: 100 }
+    ];
+
+    const TASKS = [
+      { id: 'prayer', title: 'الصلاة في وقتها', pts: 10, icon: '🕌' },
+      { id: 'homework', title: 'إنجاز الواجب والترتيب', pts: 10, icon: '📚' },
+      { id: 'manners', title: 'حسن التعامل والهدوء', pts: 10, icon: '🤝' },
+      { id: 'reading', title: 'قراءة أو نشاط مفيد', pts: 15, icon: '✨' }
+    ];
+
+    const PRAYERS = [
+      { name: 'الفجر', time: '05:15 ص', minutes: 5 * 60 + 15 },
+      { name: 'الظهر', time: '12:18 م', minutes: 12 * 60 + 18 },
+      { name: 'العصر', time: '03:20 م', minutes: 15 * 60 + 20 },
+      { name: 'المغرب', time: '05:45 م', minutes: 17 * 60 + 45 },
+      { name: 'العشاء', time: '07:15 م', minutes: 19 * 60 + 15 }
+    ];
+
+    function getTodayKey() {
+      const d = new Date();
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    }
+
+    function loadState() {
+      const fallback = {
+        selectedKidId: 'abdullah',
+        kids: DEFAULT_KIDS.map(k => ({ ...k })),
+        dailyEarned: {},
+        logs: []
+      };
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return fallback;
+        const parsed = JSON.parse(raw);
+        return {
+          selectedKidId: parsed.selectedKidId || 'abdullah',
+          kids: Array.isArray(parsed.kids) && parsed.kids.length ? parsed.kids : fallback.kids,
+          dailyEarned: parsed.dailyEarned || {},
+          logs: Array.isArray(parsed.logs) ? parsed.logs : []
+        };
+      } catch {
+        return fallback;
+      }
+    }
+
+    let state = loadState();
+    let pendingPinCallback = null;
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function showToast(msg) {
+      const box = document.getElementById('toastBox');
+      box.textContent = msg;
+      box.classList.add('show');
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(() => box.classList.remove('show'), 2600);
+    }
+
+    function getKidById(id) {
+      return state.kids.find(k => k.id === id) || state.kids[0];
+    }
+
+    function getKidDailyEarned(kidId) {
+      const today = getTodayKey();
+      return (state.dailyEarned[today] && state.dailyEarned[today][kidId]) || 0;
+    }
+
+    function addKidDailyEarned(kidId, amount) {
+      const today = getTodayKey();
+      if (!state.dailyEarned[today]) state.dailyEarned[today] = {};
+      state.dailyEarned[today][kidId] = (state.dailyEarned[today][kidId] || 0) + amount;
+    }
+
+    function getKidUrl(kidId) {
+      const base = `${window.location.origin}${window.location.pathname}`;
+      return `${base}?kid=${encodeURIComponent(kidId)}`;
+    }
+
+    function getDashboardUrl() {
+      return `${window.location.origin}${window.location.pathname}`;
+    }
+
+    function getRequestedKidParam() {
+      const params = new URLSearchParams(window.location.search);
+      const kidParam = params.get('kid');
+      if (!kidParam) return null;
+      const found = state.kids.find(k => k.id.toLowerCase() === kidParam.toLowerCase());
+      return found ? found.id : null;
+    }
+
+    function addLog(kidId, type, delta, reason) {
+      const kid = getKidById(kidId);
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' });
+      state.logs.unshift({
+        id: Date.now() + Math.random(),
+        kidId,
+        kidName: kid.name,
+        type,
+        delta,
+        reason,
+        time: timeStr
+      });
+      if (state.logs.length > 60) state.logs.length = 60;
+    }
+
+    function awardPoints(kidId, amount, reason) {
+      const kid = getKidById(kidId);
+      const earnedToday = getKidDailyEarned(kidId);
+      const remainingCap = Math.max(0, DAILY_CAP - earnedToday);
+
+      if (remainingCap <= 0) {
+        showToast(`وصل ${kid.name} للحد اليومي (${DAILY_CAP} نقطة) اليوم`);
+        return;
+      }
+
+      const actualAdd = Math.min(amount, remainingCap);
+      kid.points += actualAdd;
+      addKidDailyEarned(kidId, actualAdd);
+      addLog(kidId, 'plus', actualAdd, actualAdd < amount ? `${reason} (حد يومي ${DAILY_CAP})` : reason);
+      saveState();
+      render();
+      showToast(`+${actualAdd} نقطة لـ ${kid.name} (${reason})`);
+    }
+
+    function deductPoints(kidId, amount, reason) {
+      const kid = getKidById(kidId);
+      const actualSub = Math.min(amount, kid.points);
+      kid.points -= actualSub;
+      addLog(kidId, 'minus', -actualSub, reason);
+      saveState();
+      render();
+      showToast(`-${actualSub} نقطة من ${kid.name} (${reason})`);
+    }
+
+    function redeemReward(kidId) {
+      const kid = getKidById(kidId);
+      if (kid.points < POINTS_PER_SAR) {
+        showToast(`يحتاج ${kid.name} إلى ${POINTS_PER_SAR} نقاط على الأقل (1 ريال)`);
+        return;
+      }
+      const sarValue = (kid.points / POINTS_PER_SAR).toFixed(1).replace(/\.0$/, '');
+      const redeemedPts = kid.points;
+      kid.points = 0;
+      addLog(kidId, 'redeem', -redeemedPts, `تسليم مكافأة بقيمة ${sarValue} ريال`);
+      saveState();
+      render();
+      showToast(`تم تسليم مكافأة ${sarValue} ريال لـ ${kid.name} 🎉`);
+    }
+
+    function requirePin(title, desc, callback) {
+      pendingPinCallback = callback;
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('modalDesc').textContent = desc;
+      const input = document.getElementById('pinInput');
+      input.value = '';
+      document.getElementById('pinModal').classList.add('open');
+      setTimeout(() => input.focus(), 60);
+    }
+
+    function closePinModal() {
+      document.getElementById('pinModal').classList.remove('open');
+      pendingPinCallback = null;
+    }
+
+    document.getElementById('pinCancelBtn').addEventListener('click', closePinModal);
+    document.getElementById('pinConfirmBtn').addEventListener('click', () => {
+      const val = document.getElementById('pinInput').value.trim();
+      if (val === PARENT_PIN) {
+        const cb = pendingPinCallback;
+        closePinModal();
+        if (cb) cb();
+      } else {
+        showToast('رمز ولي الأمر غير صحيح');
+      }
+    });
+
+    document.getElementById('pinInput').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') document.getElementById('pinConfirmBtn').click();
+    });
+
+    function getPrayerStatus() {
+      const now = new Date();
+      const currentMins = now.getHours() * 60 + now.getMinutes();
+      let nextIndex = PRAYERS.findIndex(p => p.minutes > currentMins);
+      if (nextIndex === -1) nextIndex = 0;
+      return { nextIndex, nextPrayer: PRAYERS[nextIndex] };
+    }
+
+    function renderPrayerStrip() {
+      const { nextIndex, nextPrayer } = getPrayerStatus();
+      return `
+        <section class="glass prayer-strip">
+          <div class="prayer-top">
+            <strong>🕌 مواقيت الصلاة التقريبية</strong>
+            <span class="prayer-next">الصلاة القادمة: ${nextPrayer.name} (${nextPrayer.time})</span>
+          </div>
+          <div class="prayer-grid">
+            ${PRAYERS.map((p, idx) => `
+              <div class="prayer-item ${idx === nextIndex ? 'active' : ''}">
+                <div class="prayer-name">${p.name}</div>
+                <div class="prayer-time">${p.time}</div>
+              </div>
+            `).join('')}
+          </div>
+        </section>
+      `;
+    }
+
+    /* Dedicated Kid-Only View when ?kid=... is present */
+    function renderKidOnlyView(kidId) {
+      const kid = getKidById(kidId);
+      const earnedToday = getKidDailyEarned(kid.id);
+      const sarBalance = (kid.points / POINTS_PER_SAR).toFixed(1).replace(/\.0$/, '');
+      const progressPct = Math.min(100, Math.round((kid.points / kid.goal) * 100));
+      const kidLogs = state.logs.filter(l => l.kidId === kid.id).slice(0, 8);
+
+      document.getElementById('appRoot').innerHTML = `
+        <header class="glass top-header">
+          <div class="brand">
+            <h1>صفحة ${kid.name} الخاصة</h1>
+            <p>${kid.title} • كل ${POINTS_PER_SAR} نقاط = 1 ريال • حد يومي ${DAILY_CAP} نقطة</p>
+          </div>
+          <div class="header-badges">
+            <span class="pill gold">💰 الرصيد: ${sarBalance} ريال</span>
+            <button class="btn-ghost" id="openParentFromKidBtn">🔐 لوحة ولي الأمر</button>
+          </div>
+        </header>
+
+        ${renderPrayerStrip()}
+
+        <section class="glass kid-hero">
+          <div class="kid-big-avatar">${kid.avatar}</div>
+          <h2>أهلاً بك يا ${kid.name}!</h2>
+          <p class="kid-hero-sub">هذه شاشتك المخصصة لمتابعة نقاطك وإنجازاتك اليومية</p>
+
+          <div class="hero-metrics">
+            <div class="metric-box">
+              <div class="metric-label">إجمالي النقاط</div>
+              <div class="metric-val" style="color:#fde047;">${kid.points}</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-label">قيمة المكافأة الحالية</div>
+              <div class="metric-val" style="color:#86efac;">${sarBalance} ر.س</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-label">نقاط اليوم</div>
+              <div class="metric-val" style="color:#7dd3fc;">${earnedToday} / ${DAILY_CAP}</div>
+            </div>
+          </div>
+
+          <div class="progress-wrap">
+            <div style="display:flex; justify-content:space-between; font-size:0.88rem; font-weight:700;">
+              <span>التقدم نحو هدف (${kid.goal} نقطة)</span>
+              <span>${progressPct}%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width:${progressPct}%"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="glass panel">
+          <div class="section-title">
+            <span>📜 سجل نقاطك الأخير</span>
+            <span class="pill">${kidLogs.length} سجل</span>
+          </div>
+          <div class="log-list">
+            ${kidLogs.length ? kidLogs.map(item => `
+              <div class="log-item">
+                <div>
+                  <strong>${item.reason}</strong>
+                  <div style="color:var(--muted); font-size:0.78rem;">${item.time}</div>
+                </div>
+                <span class="${item.delta >= 0 ? 'log-plus' : 'log-minus'}">
+                  ${item.delta > 0 ? `+${item.delta}` : item.delta} نقطة
+                </span>
+              </div>
+            `).join('') : `<p style="color:var(--muted); font-size:0.9rem;">لا توجد حركات مسجلة بعد.</p>`}
+          </div>
+        </section>
+      `;
+
+      document.getElementById('openParentFromKidBtn').addEventListener('click', () => {
+        requirePin('الدخول للوحة التحكم', 'أدخل رمز ولي الأمر (1234) للانتقال إلى لوحة التحكم الكاملة', () => {
+          window.location.href = getDashboardUrl();
+        });
+      });
+    }
+
+    /* Full Parent Dashboard View */
+    function renderParentDashboard() {
+      const activeKid = getKidById(state.selectedKidId);
+      const activeEarnedToday = getKidDailyEarned(activeKid.id);
+      const activeSar = (activeKid.points / POINTS_PER_SAR).toFixed(1).replace(/\.0$/, '');
+
+      document.getElementById('appRoot').innerHTML = `
+        <header class="glass top-header">
+          <div class="brand">
+            <h1>لوحة متابعة نقاط الأبناء</h1>
+            <p>كل ${POINTS_PER_SAR} نقاط = 1 ريال • الحد اليومي ${DAILY_CAP} نقطة لكل ابن</p>
+          </div>
+          <div class="header-badges">
+            <span class="pill gold">🔑 رمز التحكم: ${PARENT_PIN}</span>
+            <button class="btn-ghost" id="resetDemoBtn">🔄 إعادة ضبط</button>
+          </div>
+        </header>
+
+        ${renderPrayerStrip()}
+
+        <div class="section-title">
+          <span>👨‍👩‍👧‍👦 اختر الابن لإدارة نقاطه أو نسخ رابطه الخاص</span>
+        </div>
+
+        <section class="kids-grid">
+          ${state.kids.map(kid => {
+            const sar = (kid.points / POINTS_PER_SAR).toFixed(1).replace(/\.0$/, '');
+            const earned = getKidDailyEarned(kid.id);
+            const isSelected = kid.id === activeKid.id;
+            return `
+              <div class="kid-card ${isSelected ? 'selected' : ''}" data-select-kid="${kid.id}">
+                <div class="kid-head">
+                  <div style="display:flex; align-items:center; gap:10px;">
+                    <div class="kid-avatar">${kid.avatar}</div>
+                    <div>
+                      <div class="kid-name">${kid.name}</div>
+                      <div style="font-size:0.78rem; color:var(--muted);">${kid.title}</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="kid-stats">
+                  <span class="kid-pts">${kid.points} نقطة</span>
+                  <span class="kid-sar">${sar} ريال</span>
+                </div>
+                <div class="kid-daily">نقاط اليوم: ${earned} / ${DAILY_CAP}</div>
+                <div class="kid-actions">
+                  <button class="btn-primary copy-kid-link" data-kid-link="${kid.id}">🔗 نسخ رابطه</button>
+                  <button class="btn-ghost open-kid-link" data-kid-link="${kid.id}">👁️ معاينة شاشته</button>
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </section>
+
+        <section class="workspace">
+          <div class="glass panel">
+            <div class="section-title">
+              <span>⚡ مهام وتحكم: ${activeKid.avatar} ${activeKid.name}</span>
+              <span class="pill gold">${activeKid.points} نقطة (${activeSar} ر.س)</span>
+            </div>
+            <p style="color:var(--muted); font-size:0.86rem;">
+              المتبقي من حد اليوم لـ ${activeKid.name}: <strong>${Math.max(0, DAILY_CAP - activeEarnedToday)}</strong> نقطة من أصل ${DAILY_CAP}.
+            </p>
+
+            <div class="tasks-grid">
+              ${TASKS.map(t => `
+                <div class="task-card">
+                  <div>
+                    <div class="task-title">${t.icon} ${t.title}</div>
+                    <div class="task-pts">+${t.pts} نقاط</div>
+                  </div>
+                  <button class="btn-success add-task-btn" data-pts="${t.pts}" data-title="${t.title}">إضافة النقاط</button>
+                </div>
+              `).join('')}
+            </div>
+
+            <div class="custom-adjust">
+              <input type="number" id="customPtsInput" min="1" max="100" value="5" style="width:88px;" />
+              <input type="text" id="customReasonInput" placeholder="سبب الإضافة أو الخصم..." style="flex:1; min-width:150px;" />
+              <button class="btn-success" id="customAddBtn">+ إضافة</button>
+              <button class="btn-danger" id="customSubBtn">- خصم</button>
+              <button class="btn-warning" id="redeemBtn">🎁 تسليم المكافأة</button>
+            </div>
+          </div>
+
+          <div class="glass panel">
+            <div class="section-title">
+              <span>🕒 سجل الحركات</span>
+              <span class="pill">${state.logs.length}</span>
+            </div>
+            <div class="log-list">
+              ${state.logs.length ? state.logs.slice(0, 18).map(item => {
+                const cls = item.type === 'plus' ? 'log-plus' : item.type === 'redeem' ? 'log-redeem' : 'log-minus';
+                const sign = item.delta > 0 ? `+${item.delta}` : item.delta;
+                return `
+                  <div class="log-item">
+                    <div>
+                      <strong>${item.kidName}</strong> — ${item.reason}
+                      <div style="color:var(--muted); font-size:0.76rem;">${item.time}</div>
+                    </div>
+                    <span class="${cls}">${sign} نقطة</span>
+                  </div>
+                `;
+              }).join('') : `<p style="color:var(--muted); font-size:0.9rem;">لا توجد حركات مسجلة بعد.</p>`}
+            </div>
+          </div>
+        </section>
+      `;
+
+      document.querySelectorAll('[data-select-kid]').forEach(card => {
+        card.addEventListener('click', (e) => {
+          if (e.target.closest('button')) return;
+          state.selectedKidId = card.dataset.selectKid;
+          saveState();
+          render();
+        });
+      });
+
+      document.querySelectorAll('.copy-kid-link').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          e.stopPropagation();
+          const kidId = btn.dataset.kidLink;
+          const kid = getKidById(kidId);
+          const url = getKidUrl(kidId);
+          try {
+            await navigator.clipboard.writeText(url);
+          } catch {
+            const temp = document.createElement('input');
+            temp.value = url;
+            document.body.appendChild(temp);
+            temp.select();
+            document.execCommand('copy');
+            document.body.removeChild(temp);
+          }
+          showToast(`تم نسخ رابط ${kid.name} الخاص`);
+        });
+      });
+
+      document.querySelectorAll('.open-kid-link').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const kidId = btn.dataset.kidLink;
+          window.open(getKidUrl(kidId), '_blank');
+        });
+      });
+
+      document.querySelectorAll('.add-task-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const pts = Number(btn.dataset.pts);
+          const title = btn.dataset.title;
+          awardPoints(activeKid.id, pts, title);
+        });
+      });
+
+      document.getElementById('customAddBtn').addEventListener('click', () => {
+        const pts = Math.max(1, Number(document.getElementById('customPtsInput').value) || 0);
+        const reason = (document.getElementById('customReasonInput').value || 'مكافأة إضافية').trim();
+        awardPoints(activeKid.id, pts, reason);
+      });
+
+      document.getElementById('customSubBtn').addEventListener('click', () => {
+        const pts = Math.max(1, Number(document.getElementById('customPtsInput').value) || 0);
+        const reason = (document.getElementById('customReasonInput').value || 'خصم نقاط').trim();
+        requirePin('تأكيد الخصم', `أدخل رمز ولي الأمر (1234) لخصم ${pts} نقطة من ${activeKid.name}`, () => {
+          deductPoints(activeKid.id, pts, reason);
+        });
+      });
+
+      document.getElementById('redeemBtn').addEventListener('click', () => {
+        requirePin('تأكيد تسليم المكافأة', `أدخل رمز ولي الأمر (1234) لتسليم مكافأة ${activeKid.name}`, () => {
+          redeemReward(activeKid.id);
+        });
+      });
+
+      document.getElementById('resetDemoBtn').addEventListener('click', () => {
+        requirePin('إعادة ضبط البيانات', 'أدخل رمز ولي الأمر (1234) لإعادة ضبط النقاط والسجل للقيم الافتراضية', () => {
+          localStorage.removeItem(STORAGE_KEY);
+          state = loadState();
+          render();
+          showToast('تمت إعادة الضبط بنجاح');
+        });
+      });
+    }
+
+    function render() {
+      const requestedKidId = getRequestedKidParam();
+      if (requestedKidId) {
+        renderKidOnlyView(requestedKidId);
+      } else {
+        renderParentDashboard();
+      }
+    }
+
+    render();
+  </script>
+</body>
+</html>
